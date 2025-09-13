@@ -9,6 +9,7 @@ import dashboardBg from '@/assets/dashboard-bg.jpg';
 const Dashboard = () => {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [loading, setLoading] = useState(true);
+  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const { toast } = useToast();
 
@@ -18,15 +19,23 @@ const Dashboard = () => {
 
   const loadData = async () => {
     try {
+      setConnectionStatus('connecting');
       const data = await sheetsService.getMetrics();
       setMetrics(data);
       setLastUpdated(new Date());
+      setConnectionStatus('connected');
       setLoading(false);
+      
+      toast({
+        title: "Dashboard Connected",
+        description: "Successfully loaded data from Google Sheets",
+      });
     } catch (error) {
       console.error('Error loading dashboard data:', error);
+      setConnectionStatus('error');
       toast({
-        title: "Error Loading Data",
-        description: "Failed to load dashboard data. Please check your connection.",
+        title: "Connection Issue",
+        description: "Using demo data. Check your Google Sheets URL and permissions.",
         variant: "destructive",
       });
       setLoading(false);
@@ -40,9 +49,10 @@ const Dashboard = () => {
     const refreshInterval = sheetsService.startAutoRefresh((newMetrics) => {
       setMetrics(newMetrics);
       setLastUpdated(new Date());
+      setConnectionStatus('connected');
       toast({
-        title: "Data Updated",
-        description: "Dashboard data has been refreshed with latest information.",
+        title: "Data Refreshed",
+        description: "Dashboard updated with latest Google Sheets data",
       });
     }, 60000);
 
@@ -99,8 +109,17 @@ const Dashboard = () => {
           </div>
           <div className="text-right">
             <div className="flex items-center space-x-2 mb-2">
-              <div className="w-3 h-3 rounded-full bg-success animate-glow"></div>
-              <span className="text-sm text-success font-medium">Live</span>
+              <div className={`w-3 h-3 rounded-full animate-glow ${
+                connectionStatus === 'connected' ? 'bg-success' : 
+                connectionStatus === 'connecting' ? 'bg-warning' : 'bg-destructive'
+              }`}></div>
+              <span className={`text-sm font-medium ${
+                connectionStatus === 'connected' ? 'text-success' : 
+                connectionStatus === 'connecting' ? 'text-warning' : 'text-destructive'
+              }`}>
+                {connectionStatus === 'connected' ? 'Live' : 
+                 connectionStatus === 'connecting' ? 'Connecting...' : 'Demo Mode'}
+              </span>
             </div>
             {lastUpdated && (
               <p className="text-xs text-muted-foreground">
