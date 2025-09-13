@@ -2,41 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
+/* Futuristic Dashboard Design System */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core Colors */
+    --background: 240 10% 3.9%;
+    --foreground: 280 100% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Card System */
+    --card: 240 10% 3.9%;
+    --card-foreground: 280 100% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Glass Effects */
+    --glass: 270 50% 15%;
+    --glass-foreground: 280 100% 95%;
+    --glass-border: 270 50% 25%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Purple Neon System */
+    --primary: 270 100% 70%;
+    --primary-foreground: 240 10% 3.9%;
+    --primary-glow: 270 100% 80%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary Purple */
+    --secondary: 260 30% 20%;
+    --secondary-foreground: 280 100% 95%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Accent System */
+    --accent: 290 100% 75%;
+    --accent-foreground: 240 10% 3.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Muted System */
+    --muted: 240 20% 15%;
+    --muted-foreground: 280 50% 70%;
 
+    /* Status Colors */
+    --success: 120 100% 60%;
+    --success-foreground: 240 10% 3.9%;
+    --warning: 45 100% 60%;
+    --warning-foreground: 240 10% 3.9%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 280 100% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Interactive Elements */
+    --border: 270 50% 25%;
+    --input: 240 20% 15%;
+    --ring: 270 100% 70%;
+    --radius: 0.75rem;
 
-    --radius: 0.5rem;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    --gradient-background: radial-gradient(ellipse at top, hsl(270 50% 8%), hsl(240 10% 3.9%));
+    --gradient-glass: linear-gradient(135deg, hsla(270, 50%, 15%, 0.8), hsla(260, 40%, 12%, 0.6));
+    --gradient-neon: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary-glow)), hsl(var(--accent)));
+
+    /* Shadows & Effects */
+    --shadow-glass: 0 8px 32px hsla(270, 100%, 70%, 0.15);
+    --shadow-neon: 0 0 20px hsla(270, 100%, 70%, 0.5);
+    --shadow-card: 0 4px 20px hsla(240, 100%, 0%, 0.5);
+
+    /* Animation Timing */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +127,96 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    background: var(--gradient-background);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  /* Glass Card Component */
+  .glass-card {
+    @apply backdrop-blur-xl border-glass-border;
+    background: var(--gradient-glass);
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: var(--shadow-glass);
+  }
+
+  /* Neon Glow Effects */
+  .neon-glow {
+    box-shadow: var(--shadow-neon);
+  }
+
+  .neon-text {
+    text-shadow: 0 0 10px hsl(var(--primary));
+  }
+
+  /* Animated Elements */
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Hover Effects */
+  .hover-lift {
+    transition: var(--transition-smooth);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glass), var(--shadow-neon);
+  }
+
+  /* Chart Container */
+  .chart-container {
+    @apply glass-card p-6 rounded-xl;
+  }
+
+  /* Metric Card */
+  .metric-card {
+    @apply glass-card p-6 rounded-xl hover-lift cursor-pointer;
+    transition: var(--transition-bounce);
+  }
+
+  .metric-card:hover {
+    background: linear-gradient(135deg, hsla(270, 50%, 20%, 0.9), hsla(260, 40%, 17%, 0.7));
+  }
+}
+
+@layer utilities {
+  /* Custom Keyframes */
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 20px hsla(270, 100%, 70%, 0.5);
+    }
+    to {
+      box-shadow: 0 0 30px hsla(270, 100%, 70%, 0.8), 0 0 40px hsla(290, 100%, 75%, 0.3);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slideInUp 0.6s ease-out;
   }
 }
