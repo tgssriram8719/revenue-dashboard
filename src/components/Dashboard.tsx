@@ -14,7 +14,7 @@ const Dashboard = () => {
   const { toast } = useToast();
 
   const sheetsService = new GoogleSheetsService(
-    'https://docs.google.com/spreadsheets/d/11XmK-RiE3lVQEKAsHtv8_tOiYS4BVavV9VLxlRynxG0/export?format=csv&gid=0'
+    'https://docs.google.com/spreadsheets/d/11XmK-RiE3lVQEKAsHtv8_tOiYS4BVavV9VLxlRynxG0/export?format=csv'
   );
 
   const loadData = async () => {
